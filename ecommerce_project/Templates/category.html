@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+        {% if category %}
+            {{ category.description|truncatewords:155 }}
+        {% else %}
+            Welcome to Shop It  here you can buy different items.....
+        {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name }}  -Shop It
+    {% else %}
+        See our New Collections   - Shop It
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+    {% if category %}
+        <div>
+            <div class="row my_row_class">
+                <div class="mx-auto">
+                    <p><a class="text-center" href="{% url 'shop:allProdCat' %}">Our Product Collections</a></p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="mx-auto">
+        {% if category %}
+        <img class="my_category_image" src="{{category.images.url}}" alt="{{category.name}}">
+    </div>
+        <br>
+    <div>
+        <h1 class="text-center my_category_name">{{category.name}}</h1>
+        <p class="text-justify">{{category.description}}</p>
+    </div>
+        {% else %}
+    <div>
+        <img class="my_category_image my_banner_image" src="{% static 'img/banner1.png' %}" alt="banner_image" width="1285px">
+    </div>
+        <br>
+    <div>
+        <h1 class="text-center my_category_name"><b>Our Product Collections</b></h1>
+        <p class="text-justify">Today, there are many dummy/filler text generators to choose from, so you don’t necessarily need to use Lorem ipsum. There’s, for example, Corporate ipsum which is based off of business terminologies. Or Cupcake ipsum for those who love baked goods.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="container">
+        <div class="row max-auto">
+            <div class="row row-12 row row-cols-4 row-cols-sm-5 row-cols-md-4 category_row_margin_class">
+                {% for product in products.object_list %}
+                <div class="card_margin_bottom col-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="card text-center border-transparent hover:box-shadow">
+                        <div class="card-title h5 mb-3 my_category_name">{{product.Section}}</div>
+                        <div class="card-img">
+                            <a href="{{ product.get_url }}">
+                                <img class="card-img-top card_image" src="{{product.images.url}}" alt="{{product.name}}">
+                            </a>
+                        </div><div class="row h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h4 class="card-title">{{ product.name }}</h4>
+                            <p class="card-text"><b>₹{{ product.price }}</b></p>
+                        </div></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mx-auto"><hr>
+                {% if products.paginator.num_pages > 1 %}
+                <div class="text-center">
+                    {% for pg in products.paginator.page_range %}
+                        <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
